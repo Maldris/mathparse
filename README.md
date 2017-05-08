@@ -54,3 +54,31 @@ Each of which will read the expression in and tokenise it as `NewParser` does, b
 
 If multiple segment data is intended, but not desired as a string expression, the raw tokens can be retreived via `GetTokens`, which will return the raw token tree from the parser.
 Useful if you have funciton aruements separated by commas, and you want to then take the result and pass into an external function.
+
+
+### tokens
+The structure of each token is quite simple:
+```
+  type Token struct {
+    Type       TokenType
+    Value      string
+    ParseValue float64
+    Children   []Token
+  }
+```
+Type is the type of token, from an enum (see below), value, which is the raw string value of the token (i.e. "3.8", "+", "a", "sin", etc), ParseValue, which is the float of the value, if the type is a literal. And lastly, Children, which will contain child tokens nested under this token, which is only the case for functions, and Parenthesis.
+
+TokenType may take on the following values:
+```
+const (
+  undefined TokenType = iota // 0 - unknown token character
+  space                      // 1 - space character, ignored
+  literal                    // 2 - a literal, a number
+  variable                   // 3 - variables
+  operation                  // 4 - any of the following mathematical operations: * / + - ^
+  function                   // 5 - a function, it will have the expression for its arguements as Child tokens
+  lparen                     // 6 - opening parenthasis, will have the enclosed expression as Child tokens
+  rparen                     // 7 - closing parenthasis, used internally, stripped in tree creation, used to mark the end of the current function or parenthasis
+  funcDelim                  // 8 - delimits function arguements, doesnt do anything, but prevents, adjacent expressions being evaluated together
+)
+```
