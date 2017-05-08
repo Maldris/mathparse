@@ -18,6 +18,7 @@ This was chosen as it allowed parsing with implicit multiplication (useful as pe
 Most other use cases I am likely to use this for will be maths related, where there is a convention of single letter variable names
 
 ## Usage
+### Parser
 The core functionality is provided by the Parser object, if you have the expression ready, you can create the parser, and process your expression at the same time with
 ```
   expression := "89sin(1.57) + 2.2(31)/7"
@@ -50,3 +51,6 @@ Here `GetValueResult` retreives the float result of the expression, and `GetExpr
 Its worth noting that the parser object is reusable if need be, if after parsing one expression you wish to parse another, simply load your next one with either `ReadExpression` or `ReadMultipartExpression`.
 Each of which will read the expression in and tokenise it as `NewParser` does, but on an existing parser.
 `ReadMultipartExpression` exists so that if you have an expression already in multiple parts (i.e. separated as function inputs to a text/template function call) the library is still simple to use. It will simple concatenate the expression segments, and proceed to attempt to resolve the resultant expression.
+
+If multiple segment data is intended, but not desired as a string expression, the raw tokens can be retreived via `GetTokens`, which will return the raw token tree from the parser.
+Useful if you have funciton aruements separated by commas, and you want to then take the result and pass into an external function.
